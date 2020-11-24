@@ -42,7 +42,7 @@ namespace gameOfLife
             }
 
         }
-        public Bot(World w,Bot parent)
+        public Bot(World w,Bot parentStrong, Bot parent)
         {
             world = w;
             health = 90;
@@ -62,8 +62,14 @@ namespace gameOfLife
             }
 
             //int c = 
-            brain = parent.brain;
-            
+            for (int i = 0; i < brain.Count(); i++)
+                if (i < brain.Count() / 2)
+                    brain[i] = parentStrong.brain[i];
+                else
+                    brain[i] = parent.brain[i];
+
+
+
 
         }
         void die (int reason)
@@ -71,7 +77,7 @@ namespace gameOfLife
             switch(reason)
             {
                 case 0: { world.worldTable[locX, locY] = 0; break; }
-                case 1: { world.worldTable[locX, locY] = -1; health -= 100; break; }
+                case 1: { world.worldTable[locX, locY] = -1; health -= 100;Console.WriteLine("died of poison"); break; }
             }
         }
         public void do_It()
