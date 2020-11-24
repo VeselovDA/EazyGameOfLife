@@ -27,15 +27,47 @@ namespace gameOfLife
         World world;
         bool checkGeneration = false;
         int GenCounter = 0;
+        Random random = new Random();
         
         public MainWindow()
         {
             InitializeComponent();
-           //await Task.Run(() => HelpMePls());
+            //pressBtn();
+
+
+
 
 
         }
-       
+
+        private async void pressBtn()
+        {
+           
+                     await Task.Run(() => {
+                         while (true)
+                             if (GenCounter > 0) Send(Key.M);
+                     });
+        }
+        public  static void Send(Key key)
+        {
+            if (Keyboard.PrimaryDevice != null)
+            {
+                if (Keyboard.PrimaryDevice.ActiveSource != null)
+                {
+                    var e = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, key)
+                    {
+                        RoutedEvent = Keyboard.KeyDownEvent
+                    };
+                    InputManager.Current.ProcessInput(e);
+
+                    // Note: Based on your requirements you may also need to fire events for:
+                    // RoutedEvent = Keyboard.PreviewKeyDownEvent
+                    // RoutedEvent = Keyboard.KeyUpEvent
+                    // RoutedEvent = Keyboard.PreviewKeyUpEvent
+                }
+            }
+        }
+
 
         private void downloadWorld_Click(object sender, RoutedEventArgs e)
         {
@@ -101,7 +133,7 @@ namespace gameOfLife
         }
         void spawnBot()
         {
-            for (int i = 0; i <8; i++)
+            for (int i = 0; i <16; i++)
                 listBot.Add(new Bot(world));
             updateLabel();
         
@@ -142,6 +174,25 @@ namespace gameOfLife
                             }
                     }
         }
+        void crateOrganic(string oraganic)
+        {
+            while (true)
+            {
+                int locX = random.Next(1, world.worldTable.GetLength(0) - 1);
+                int locY = random.Next(1, world.worldTable.GetLength(1) - 1);
+                if (world.worldTable[locX, locY] !=2 && world.worldTable[locX, locY] != 3)
+                {
+                   switch(oraganic)
+                    {
+                        case "eat": { world.worldTable[locX, locY] = 1; break; }
+                        case "venom": { world.worldTable[locX, locY] = -1; break; }
+                    }
+                   
+                    break;
+                }
+
+            }
+        }
 
 
 
@@ -152,22 +203,31 @@ namespace gameOfLife
             {
                 if (listBot.Count == 4)
                 {
+                    for(int z=0;z<2;z++)
+                    {
+                        crateOrganic("eat");
+                        crateOrganic("venom");
+                    }
                     GenCounter++;
                     GebCounter.Content = "Поколение: " + GenCounter;
                     checkGeneration = true;
-                    listBot[0].health = 50;
+                    Bot bot = listBot[0];
+                    for (int j = 1; j < 4; j++)
+                    {
+                        if (listBot[j].health > bot.health)
+                            bot = listBot[j];
+                    }
+
+                        for (int j = 0; j < 4; j++)
+                    {
+                        listBot.Add(new Bot(world, bot,listBot[j]));
+
+                    }
+                    /*listBot[0].health = 50;
                     listBot[1].health = 50;
                     listBot[2].health = 50;
-                    listBot[3].health = 50;
+                    listBot[3].health = 50;*/
 
-                    for (int j = 0; j < 1; j++)
-                    {
-                        listBot.Add(new Bot(world, listBot[0]));
-                        listBot.Add(new Bot(world, listBot[1]));
-                        listBot.Add(new Bot(world, listBot[2]));
-                        listBot.Add(new Bot(world, listBot[3]));
-                    }
-                    
                     break;
                 }
 
@@ -202,10 +262,20 @@ namespace gameOfLife
 
         private void resetBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            for (int i = 0; i < 5; i++)
+            {
+               // Send(Key.M);
+                
+            }
+
         }
 
-    
+        private void stepBtn_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.M)
+                thousandStep_Click(thousandStep, null);
+
+        }
     }
 }
 
