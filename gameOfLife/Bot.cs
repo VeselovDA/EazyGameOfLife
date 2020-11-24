@@ -38,7 +38,7 @@ namespace gameOfLife
             for (int i=0;i<brain.Length;i++)
             {
               //int c = 
-                brain[i] = random.Next(0, 8);
+                brain[i] = random.Next(0, 10);
             }
 
         }
@@ -51,7 +51,7 @@ namespace gameOfLife
             {
                 int locX = random.Next(1, world.worldTable.GetLength(0) - 1);
                 int locY = random.Next(1, world.worldTable.GetLength(1) - 1);
-                if (world.worldTable[locX, locY] == 0)
+                if (world.worldTable[locX, locY]  ==0)
                 {
                     this.locX = locX;
                     this.locY = locY;
@@ -88,8 +88,9 @@ namespace gameOfLife
                     case 5: { if (world.worldTable[locX + 1, locY] == -1) world.worldTable[locX + 1, locY] = 1; health -= 1; doStep("down"); Console.WriteLine("down venom"); break; }
                     case 6: { if (world.worldTable[locX, locY + 1] == -1) world.worldTable[locX, locY + 1] = 1; health -= 1; doStep("right"); Console.WriteLine("right venom"); break; }
                     case 7: { if (world.worldTable[locX, locY - 1] == -1) world.worldTable[locX, locY - 1] = 1; health -= 1; doStep("left"); Console.WriteLine("left venom"); break; }
+                    case 8: { break; }
 
-                    default: { break; }
+                    default: { pointerComand += brain[pointerComand % 64]; break; }
                 }
                 pointerComand++;
                 

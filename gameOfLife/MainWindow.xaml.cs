@@ -26,6 +26,7 @@ namespace gameOfLife
         Label[,] labels;
         World world;
         bool checkGeneration = false;
+        int GenCounter = 0;
         
         public MainWindow()
         {
@@ -38,23 +39,32 @@ namespace gameOfLife
 
         private void downloadWorld_Click(object sender, RoutedEventArgs e)
         {
+            GenCounter = 0;
             //хардкод входного массива мира
-            int[,] ggWorld = new int[13, 13]
+            int[,] ggWorld = new int[21, 21]
             {
-                { 2,2,2,2,2,2,2,2,2,2,2,2,2 },
-                { 2,1,0,0,0,0,0,-1,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,1,0,0,0,0,2 },
-                { 2,0,2,0,-1,0,1,0,0,0,-1,0,2 },
-                { 2,0,2,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,2,0,0,0,0,0,0-1,0,0,0,2 },
-                { 2,0,2,2,1,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,1,0,0,1,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,1,0,0,0,2,2,2,2,0,1,2 },
-                { 2,-1,0,0,0,0,1,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,1,0,0,0,0,0,2 },
-                { 2,2,2,2,2,2,2,2,2,2,2,2,2 }
-               
+               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+               {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+               {2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+               {2,0,0,0,2,1,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,2 },
+               {2,0,0,-1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+               {2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2 },
+               {2,0,1,0,2,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+               {2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+               {2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2 },
+               {2,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2 },
+               {2,0,0,0,2,2,2,2,0,0,0,1,0,0,0,0,0,0,1,0,2 },
+               {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+               {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,2 },
+               {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,2 },
+               {2,0,-1,1,0,-1,0,0,1,0,0,0,0,0,0,2,0,0,0,0,2 },
+               {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,2 },
+               {2,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,2,0,0,0,0,2 },
+               {2,0,0,0,0,1,1,1,0,0,0,0,0,0,0,2,0,0,0,0,2 },
+               {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,2 },
+               {2,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,2 }, 
+               {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+
             };
             //создание экземпляра мира
             world = new World(ggWorld);
@@ -72,9 +82,9 @@ namespace gameOfLife
 
                 {
                     ColumnDefinition columnDefinition = new ColumnDefinition();
-                    columnDefinition.Width = new GridLength(workSpase.ActualHeight / world.worldTable.GetLength(1), GridUnitType.Pixel);
+                    columnDefinition.Width = new GridLength(workSpase.ActualHeight / world.worldTable.GetLength(1)-5, GridUnitType.Pixel);
                     RowDefinition rowDefinition = new RowDefinition();
-                    rowDefinition.Height = new GridLength(workSpase.ActualHeight/ world.worldTable.GetLength(1), GridUnitType.Pixel);
+                    rowDefinition.Height = new GridLength(workSpase.ActualHeight/ world.worldTable.GetLength(1)-5, GridUnitType.Pixel);
                     workSpase.ColumnDefinitions.Add(columnDefinition);
 
                     workSpase.RowDefinitions.Add(rowDefinition);
@@ -91,7 +101,7 @@ namespace gameOfLife
         }
         void spawnBot()
         {
-            for (int i = 0; i <6; i++)
+            for (int i = 0; i <8; i++)
                 listBot.Add(new Bot(world));
             updateLabel();
         
@@ -140,16 +150,24 @@ namespace gameOfLife
             checkGeneration = false;
             for (int i=0;i<listBot.Count;i++)
             {
-                if (listBot.Count == 2)
+                if (listBot.Count == 4)
                 {
+                    GenCounter++;
+                    GebCounter.Content = "Поколение: " + GenCounter;
                     checkGeneration = true;
-                    for (int j = 0; j < 2; j++)
+                    listBot[0].health = 50;
+                    listBot[1].health = 50;
+                    listBot[2].health = 50;
+                    listBot[3].health = 50;
+
+                    for (int j = 0; j < 1; j++)
                     {
                         listBot.Add(new Bot(world, listBot[0]));
                         listBot.Add(new Bot(world, listBot[1]));
+                        listBot.Add(new Bot(world, listBot[2]));
+                        listBot.Add(new Bot(world, listBot[3]));
                     }
-                    listBot[0].health = 50;
-                    listBot[1].health = 50;
+                    
                     break;
                 }
 
@@ -177,7 +195,8 @@ namespace gameOfLife
         {
             while (!checkGeneration)
                 stepBtn_Click(stepBtn, null);
-            stepBtn_Click(stepBtn, null);
+           stepBtn_Click(stepBtn, null);
+           // stepBtn_Click(stepBtn, null);
 
         }
 
