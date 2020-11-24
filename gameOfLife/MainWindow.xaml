@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gameOfLife"
         mc:Ignorable="d"
-        Title="Game of evolution" Height="545" Width="750"
-        MaxHeight="545" MaxWidth="750" MinHeight="545" MinWidth="750"
+        Title="Game of evolution" Height="750" Width="1000"
+        MinHeight="750" MinWidth="1000"
+        WindowState="Maximized"
         
         >
     <Grid Background="#cdc9d1 ">
@@ -22,8 +23,9 @@
                 <Button x:Name="stepBtn" Content="Шаг" Margin="10" Click="stepBtn_Click" Height="40"/>
                 <Button x:Name="thousandStep" Content="1000 шагов" Margin="10" Height="40" Click="thousandStep_Click"/>
                 <Button x:Name="resetBtn" Content="Сброс" Margin="10,10,10.4,10" Height="40" Click="resetBtn_Click"/>
-
+                <Label Name="GebCounter" Content="Поколение: 0" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>
             </StackPanel>
+           
 
 
         </Grid>
