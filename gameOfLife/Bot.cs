@@ -9,14 +9,16 @@ namespace gameOfLife
     class Bot
     {
         public int health { get; set; }
-        int[] brain = new int[64];
+        public int[] brain = new int[64];
         public int locX { get; set; }
         public int locY { get; set; }
         World world;
         Random random = new Random();
         int pointerComand = 0;
+        public int EmptyStep { get; set; }
+        public int VenomStep { get; set; }
 
-       
+
         public Bot(World w)
         {
             world = w;
@@ -38,8 +40,20 @@ namespace gameOfLife
             for (int i=0;i<brain.Length;i++)
             {
               //int c = 
-                brain[i] = random.Next(0, 10);
+                brain[i] = random.Next(0, 20);
             }
+            foreach (int brain in brain)
+                switch (brain)
+                {
+                    case 0: { EmptyStep++; break; }
+                    case 1: { EmptyStep++; break; }
+                    case 2: { EmptyStep++; break; }
+                    case 3: { EmptyStep++; break; }
+                    case 4: { VenomStep++; break; }
+                    case 5: { VenomStep++; break; }
+                    case 6: { VenomStep++; break; }
+                    case 7: { VenomStep++; break; }
+                }
 
         }
         public Bot(World w,Bot parentStrong, Bot parent)
@@ -63,10 +77,23 @@ namespace gameOfLife
 
             //int c = 
             for (int i = 0; i < brain.Count(); i++)
-                if (i < brain.Count() / 2)
+                if (i % 2==0)
                     brain[i] = parentStrong.brain[i];
                 else
                     brain[i] = parent.brain[i];
+
+            foreach (int brain in brain)
+                switch (brain)
+                {
+                    case 0: { EmptyStep++; break; }
+                    case 1: { EmptyStep++; break; }
+                    case 2: { EmptyStep++; break; }
+                    case 3: { EmptyStep++; break; }
+                    case 4: { VenomStep++; break; }
+                    case 5: { VenomStep++; break; }
+                    case 6: { VenomStep++; break; }
+                    case 7: { VenomStep++; break; }
+                }
 
 
 
@@ -82,6 +109,7 @@ namespace gameOfLife
         }
         public void do_It()
         {
+
             for (int i = 0; i < 1; i++)
             {
                 switch (brain[pointerComand%64])
@@ -170,7 +198,26 @@ namespace gameOfLife
 
 
 
-
+        public void Mutation()
+        {
+            for (int i = 0; i < brain.Length; i++)
+                if (i % 8 == 0)
+                    brain[i] = random.Next(0, 20);
+            EmptyStep = 0;
+            VenomStep = 0;
+            foreach (int brain in brain)
+                switch (brain)
+                {
+                    case 0: { EmptyStep++; break; }
+                    case 1: { EmptyStep++; break; }
+                    case 2: { EmptyStep++; break; }
+                    case 3: { EmptyStep++; break; }
+                    case 4: { VenomStep++; break; }
+                    case 5: { VenomStep++; break; }
+                    case 6: { VenomStep++; break; }
+                    case 7: { VenomStep++; break; }
+                }
+        }
     }
 
 }

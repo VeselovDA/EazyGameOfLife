@@ -24,6 +24,7 @@
                 <Button x:Name="thousandStep" Content="1000 шагов" Margin="10" Height="40" Click="thousandStep_Click"/>
                 <Button x:Name="resetBtn" Content="Сброс" Margin="10,10,10.4,10" Height="40" Click="resetBtn_Click"/>
                 <Label Name="GebCounter" Content="Поколение: 0" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>
+                <DataGrid x:Name="dgCheck"> </DataGrid>
             </StackPanel>
            
 

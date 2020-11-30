@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace gameOfLife
 {
@@ -23,6 +26,8 @@ namespace gameOfLife
     public partial class MainWindow : Window
     {
         List<Bot> listBot = new List<Bot>();
+        ObservableCollection<CheckStatistic> listBotCheck = new ObservableCollection<CheckStatistic>();
+        
         Label[,] labels;
         World world;
         bool checkGeneration = false;
@@ -32,41 +37,49 @@ namespace gameOfLife
         public MainWindow()
         {
             InitializeComponent();
+            dgCheck.ItemsSource = listBotCheck;
             //pressBtn();
-
+            
 
 
 
 
         }
-
+        void start()
+        {
+            if (GenCounter > 0)
+                Dispatcher.BeginInvoke(
+                                     DispatcherPriority.Background,
+                                     new Action(() => { Thread.Sleep(200); stepBtn_Click(stepBtn, null); })); 
+        }
         private async void pressBtn()
         {
-           
-                     await Task.Run(() => {
-                         while (true)
-                             if (GenCounter > 0) Send(Key.M);
-                     });
-        }
-        public  static void Send(Key key)
-        {
-            if (Keyboard.PrimaryDevice != null)
-            {
-                if (Keyboard.PrimaryDevice.ActiveSource != null)
-                {
-                    var e = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, key)
-                    {
-                        RoutedEvent = Keyboard.KeyDownEvent
-                    };
-                    InputManager.Current.ProcessInput(e);
+            new Thread(start).Start();
 
-                    // Note: Based on your requirements you may also need to fire events for:
-                    // RoutedEvent = Keyboard.PreviewKeyDownEvent
-                    // RoutedEvent = Keyboard.KeyUpEvent
-                    // RoutedEvent = Keyboard.PreviewKeyUpEvent
-                }
-            }
+            /* await Task.Run(() => {
+                          int i = 0;
+                          while (i<8)
+                          {
+                              if (GenCounter > 0)
+                              {
+                                  //Dispatcher.BeginInvoke(() => );
+
+                                  var resultObj =  Dispatcher.BeginInvoke(
+                                     DispatcherPriority.Background,
+                                     new Action(() => { Thread.Sleep(200); stepBtn_Click(stepBtn, null); }));
+                                  i++;
+
+
+
+                              };
+                             // Dispatcher.CurrentDispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
+
+                          }
+
+
+                      });*/
         }
+
 
 
         private void downloadWorld_Click(object sender, RoutedEventArgs e)
@@ -198,10 +211,11 @@ namespace gameOfLife
 
         private void stepBtn_Click(object sender, RoutedEventArgs e)
         {
+            listBotCheck.Clear();
             checkGeneration = false;
             for (int i=0;i<listBot.Count;i++)
             {
-                if (listBot.Count == 4)
+                if (listBot.Count == 6)
                 {
                     for(int z=0;z<2;z++)
                     {
@@ -212,17 +226,24 @@ namespace gameOfLife
                     GebCounter.Content = "Поколение: " + GenCounter;
                     checkGeneration = true;
                     Bot bot = listBot[0];
-                    for (int j = 1; j < 4; j++)
+                    Bot bot1 = listBot[0];
+                    for (int j = 1; j < 6; j++)
                     {
-                        if (listBot[j].health > bot.health)
+                        if ((listBot[j].health+ listBot[j].VenomStep)/2 > (bot.health+bot.VenomStep)/2)
                             bot = listBot[j];
                     }
-
-                        for (int j = 0; j < 4; j++)
+                    for (int j = 1; j < 6; j++)
                     {
-                        listBot.Add(new Bot(world, bot,listBot[j]));
+                        if ((listBot[j].health + listBot[j].VenomStep) / 2 > (bot1.health + bot1.VenomStep) / 2)
+                            if(listBot[i]!=bot)
+                            bot1 = listBot[j];
+                    }
+                    for (int j = 0; j < 2; j++)
+                    {
+                        listBot.Add(new Bot(world, bot,bot1));
 
                     }
+                    listBot.Last().Mutation();
                     /*listBot[0].health = 50;
                     listBot[1].health = 50;
                     listBot[2].health = 50;
@@ -232,8 +253,9 @@ namespace gameOfLife
                 }
 
                
-                   
+           
 
+                listBotCheck.Add(new CheckStatistic(listBot[i].EmptyStep, listBot[i].VenomStep));
                 listBot[i].do_It();
                 if (listBot[i].health < 1)
                 { listBot.Remove(listBot[i]); i--; }
