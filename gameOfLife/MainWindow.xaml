@@ -8,7 +8,7 @@
         Title="Game of evolution" Height="750" Width="1000"
         MinHeight="750" MinWidth="1000"
         WindowState="Maximized"
-        KeyDown="stepBtn_KeyDown"
+        
         >
     <Grid Background="#cdc9d1 ">
         <Grid.ColumnDefinitions>
@@ -21,10 +21,12 @@
 
                 <Button x:Name="downloadWorld" Content="Загрузить" Margin="10,10,10.4,10" Click="downloadWorld_Click" Height="40"/>
                 <Button x:Name="stepBtn" Content="Шаг" Margin="10" Click="stepBtn_Click" Height="40"  />
-                <Button x:Name="thousandStep" Content="1000 шагов" Margin="10" Height="40" Click="thousandStep_Click"/>
+                <Button x:Name="thousandStep" Content="До скрещивания" Margin="10" Height="40" Click="thousandStep_Click"/>
+                <Button x:Name="startBtn" Content="Старт" Margin="10,10,10.4,10" Height="40" Click="startBtn_Click"/>
+                <Button x:Name="stopBtn" Content="Стоп" Margin="10,10,10.4,10" Height="40" Click="stopBtn_Click"/>
                 <Button x:Name="resetBtn" Content="Сброс" Margin="10,10,10.4,10" Height="40" Click="resetBtn_Click"/>
                 <Label Name="GebCounter" Content="Поколение: 0" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>
-                <DataGrid x:Name="dgCheck"> </DataGrid>
+                <DataGrid x:Name="dgCheck" Visibility="Visible"> </DataGrid>
             </StackPanel>
            
 

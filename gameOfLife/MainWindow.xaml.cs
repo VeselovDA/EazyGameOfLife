@@ -33,11 +33,16 @@ namespace gameOfLife
         bool checkGeneration = false;
         int GenCounter = 0;
         Random random = new Random();
+        DispatcherTimer timer = new DispatcherTimer();
         
         public MainWindow()
         {
             InitializeComponent();
             dgCheck.ItemsSource = listBotCheck;
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Interval = new TimeSpan(0, 0, 0,0,50);
+
+
             //pressBtn();
             
 
@@ -45,41 +50,11 @@ namespace gameOfLife
 
 
         }
-        void start()
+        void timer_Tick(object sender, EventArgs e)
         {
-            if (GenCounter > 0)
-                Dispatcher.BeginInvoke(
-                                     DispatcherPriority.Background,
-                                     new Action(() => { Thread.Sleep(200); stepBtn_Click(stepBtn, null); })); 
+            stepBtn_Click(null, null);
         }
-        private async void pressBtn()
-        {
-            new Thread(start).Start();
-
-            /* await Task.Run(() => {
-                          int i = 0;
-                          while (i<8)
-                          {
-                              if (GenCounter > 0)
-                              {
-                                  //Dispatcher.BeginInvoke(() => );
-
-                                  var resultObj =  Dispatcher.BeginInvoke(
-                                     DispatcherPriority.Background,
-                                     new Action(() => { Thread.Sleep(200); stepBtn_Click(stepBtn, null); }));
-                                  i++;
-
-
-
-                              };
-                             // Dispatcher.CurrentDispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
-
-                          }
-
-
-                      });*/
-        }
-
+       
 
 
         private void downloadWorld_Click(object sender, RoutedEventArgs e)
@@ -284,19 +259,21 @@ namespace gameOfLife
 
         private void resetBtn_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 5; i++)
-            {
-               // Send(Key.M);
-                
-            }
+            timer.Stop();
+            downloadWorld_Click(null, null);
 
         }
 
-        private void stepBtn_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.M)
-                thousandStep_Click(thousandStep, null);
+      
 
+        private void startBtn_Click(object sender, RoutedEventArgs e)
+        {
+            timer.Start();
+        }
+
+        private void stopBtn_Click(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
         }
     }
 }
